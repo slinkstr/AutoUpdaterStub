@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <AssemblyName>$(autoupdater_program_exe_name)Updater</AssemblyName>
+    <AssemblyIcon>$(autoupdater_program_icon)</AssemblyIcon>
+    <autoupdater_manifest_url>This value must be set by calling msbuild, you cannot compile in Visual Studio.</autoupdater_manifest_url>
+    <autoupdater_program_exe_name>This value must be set by calling msbuild, you cannot compile in Visual Studio.</autoupdater_program_exe_name>
+    <autoupdater_use_shell_execute>false</autoupdater_use_shell_execute>
+    <autoupdater_run_elevated>false</autoupdater_run_elevated>
+  </PropertyGroup>
+
+  <Target Name="WriteToFile" BeforeTargets="PreBuildEvent">
+    <PropertyGroup>
+      <SetStubConfiguration>
+public static class StubConfig
+{
+    public const string manifestUrl = "$(autoupdater_manifest_url)"%3B
+    public const string programExeName = "$(autoupdater_program_exe_name)"%3B
+    public const bool useShellExecute = $(autoupdater_use_shell_execute)%3B
+    public const bool runElevated = $(autoupdater_run_elevated)%3B
+}
+      </SetStubConfiguration>
+    </PropertyGroup>
+    <WriteLinesToFile File="StubConfig.cs" Lines="$(SetStubConfiguration)" Overwrite="true" />
+  </Target>
+
+</Project>
